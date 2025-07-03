@@ -184,7 +184,7 @@ function Update:StartLoad()
 	MainLoaderFrame.BorderSizePixel = 0;
 	local TitleLoader = Instance.new("TextLabel");
 	TitleLoader.Parent = MainLoaderFrame;
-	TitleLoader.Text = "STELLAR";
+	TitleLoader.Text = "RULESCRIPTS";
 	TitleLoader.Font = Enum.Font.FredokaOne;
 	TitleLoader.TextSize = 50;
 	TitleLoader.TextColor3 = Color3.fromRGB(255, 255, 255);
@@ -260,8 +260,8 @@ local SettingsLib = {
 };
 (getgenv()).LoadConfig = function()
 	if readfile and writefile and isfile and isfolder then
-		if not isfolder("STELLAR") then
-			makefolder("STELLAR");
+		if not isfolder("RULESCRIPTS") then
+			makefolder("RULESCRIPTS");
 		end;
 		if not isfolder("STELLAR/Library/") then
 			makefolder("STELLAR/Library/");
