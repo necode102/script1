@@ -75,7 +75,7 @@ ImageButton.AutoButtonColor = false;
 MakeDraggable(ImageButton, OutlineButton);
 CreateRounded(ImageButton, 10);
 ImageButton.MouseButton1Click:connect(function()
-	(game.CoreGui:FindFirstChild("STELLAR")).Enabled = not (game.CoreGui:FindFirstChild("STELLAR")).Enabled;
+	(game.CoreGui:FindFirstChild("STELLAR")).Enabled = not (game.CoreGui:FindFirstChild("ДИЛДОВАР")).Enabled;
 end);
 local NotificationFrame = Instance.new("ScreenGui");
 NotificationFrame.Name = "NotificationFrame";
