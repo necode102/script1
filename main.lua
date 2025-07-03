@@ -75,7 +75,7 @@ local toolight = false
     local TabContainer = Instance.new("Folder")
     local Items = Instance.new("ImageLabel")
     local TextLabel = Instance.new("TextLabel")
-    local Footer = Instance.new("ImageLabel") -- Добавлен футер
+    local Footer = Instance.new("ImageLabel")
 
     --Properties:
     Screen.Name = "By Shaddow"
@@ -88,8 +88,8 @@ local toolight = false
     Top.BackgroundColor3 = Color3.fromRGB(33, 32, 49)
     Top.BackgroundTransparency = 1.000
     Top.Active = true
-    Top.Position = UDim2.new(0.5, 0, 0.240482569, 0)
-    Top.Size = UDim2.new(0, 558, 0, 25)
+    Top.Position = UDim2.new(0.5, 0, 0.2, 0)
+    Top.Size = UDim2.new(0, 650, 0, 30) -- Шире и выше
     Top.Image = "rbxassetid://3570695787"
     Top.ImageColor3 = theme1
     Top.ScaleType = Enum.ScaleType.Slice
@@ -100,20 +100,20 @@ local toolight = false
     TextLabel.Parent = Top
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     TextLabel.BackgroundTransparency = 1.000
-    TextLabel.Position = UDim2.new(0.0358817279, 0, 0, 0)
-    TextLabel.Size = UDim2.new(0, 515, 0, 20)
+    TextLabel.Position = UDim2.new(0.035, 0, 0, 0)
+    TextLabel.Size = UDim2.new(0, 600, 0, 30)
     TextLabel.Font = Enum.Font.SourceSansSemibold
     TextLabel.Text = name
     TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.TextSize = 14.000
+    TextLabel.TextSize = 16.000 -- Больше текст
 
     Toggle.Name = "Toggle"
     Toggle.Parent = Top
     Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Toggle.BackgroundTransparency = 1.000
-    Toggle.Position = UDim2.new(0.00900000613, 0, 0.142857149, 0)
+    Toggle.Position = UDim2.new(0.009, 0, 0.15, 0)
     Toggle.Rotation = 90.000
-    Toggle.Size = UDim2.new(0, 15, 0, 16)
+    Toggle.Size = UDim2.new(0, 20, 0, 20) -- Больше кнопка
     Toggle.ImageColor3 = Color3.fromRGB(255, 255, 255)
     Toggle.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
 
@@ -122,8 +122,8 @@ local toolight = false
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
     Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Main.BackgroundTransparency = 1.000
-    Main.Position = UDim2.new(0.5, 0, 6.75571394, 0)
-    Main.Size = UDim2.new(0, 558, 0, 350) -- Увеличенная высота
+    Main.Position = UDim2.new(0.5, 0, 6.8, 0)
+    Main.Size = UDim2.new(0, 650, 0, 450) -- Значительно больше
     Main.Image = "rbxassetid://3570695787"
     Main.ImageColor3 = theme2
     Main.ScaleType = Enum.ScaleType.Slice
@@ -134,8 +134,8 @@ local toolight = false
     Tabs.Parent = TabContainer
     Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Tabs.BackgroundTransparency = 1.000
-    Tabs.Position = UDim2.new(0.0129999956, 0, 0.0300000086, 0)
-    Tabs.Size = UDim2.new(0, 119, 0, 330) -- Увеличенная высота
+    Tabs.Position = UDim2.new(0.013, 0, 0.03, 0)
+    Tabs.Size = UDim2.new(0, 150, 0, 420) -- Шире и выше
     Tabs.Image = "rbxassetid://3570695787"
     Tabs.ImageColor3 = theme1
     Tabs.ScaleType = Enum.ScaleType.Slice
@@ -144,7 +144,7 @@ local toolight = false
 
     UIGridLayout.Parent = Tabs
     UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIGridLayout.CellSize = UDim2.new(0, 119, 0, 26)
+    UIGridLayout.CellSize = UDim2.new(0, 150, 0, 30) -- Шире кнопки вкладок
 
     TabContainer.Name = "TabContainer"
     TabContainer.Parent = Main
@@ -153,21 +153,21 @@ local toolight = false
     Items.Parent = Main
     Items.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Items.BackgroundTransparency = 1.000
-    Items.Position = UDim2.new(0.245519713, 0, 0.030201342, 0)
-    Items.Size = UDim2.new(0, 414, 0, 330) -- Увеличенная высота
+    Items.Position = UDim2.new(0.245, 0, 0.03, 0)
+    Items.Size = UDim2.new(0, 480, 0, 420) -- Шире и выше
     Items.Image = "rbxassetid://3570695787"
     Items.ImageColor3 = theme1
     Items.ScaleType = Enum.ScaleType.Slice
     Items.SliceCenter = Rect.new(100, 100, 100, 100)
     Items.SliceScale = 0.020
 
-    -- Добавлен футер
+    -- Футер
     Footer.Name = "Footer"
     Footer.Parent = Main
     Footer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Footer.BackgroundTransparency = 1.000
-    Footer.Position = UDim2.new(0.012, 0, 0.92, 0)
-    Footer.Size = UDim2.new(0, 536, 0, 20)
+    Footer.Position = UDim2.new(0.013, 0, 0.93, 0)
+    Footer.Size = UDim2.new(0, 624, 0, 25)
     Footer.Image = "rbxassetid://3570695787"
     Footer.ImageColor3 = theme1
     Footer.ScaleType = Enum.ScaleType.Slice
@@ -180,7 +180,7 @@ local toolight = false
     FooterText.BackgroundTransparency = 1.000
     FooterText.Size = UDim2.new(1, 0, 1, 0)
     FooterText.Font = Enum.Font.SourceSansSemibold
-    FooterText.Text = "Shaddow UI Library | v1.2"
+    FooterText.Text = "Shaddow UI Library | v1.3 | "..os.date("%d/%m/%Y %H:%M")
     FooterText.TextColor3 = Color3.fromRGB(255, 255, 255)
     FooterText.TextSize = 14.000
 
@@ -209,34 +209,34 @@ local toolight = false
         TextButton1.Parent = Tabs
         TextButton1.BackgroundColor3 = Color3.fromRGB(32,32,32)
         TextButton1.BackgroundTransparency = 1.000
-        TextButton1.Size = UDim2.new(0, 70, 0, 21)
+        TextButton1.Size = UDim2.new(0, 150, 0, 30) -- Больше кнопки
         TextButton1.Font = Enum.Font.SourceSansSemibold
         TextButton1.Text = text
         TextButton1.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TextButton1.TextSize = 14.000
+        TextButton1.TextSize = 15.000 -- Больше текст
 
         Frame.Parent = Items
         Frame.Active = true
         Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Frame.BackgroundTransparency = 1.000
         Frame.BorderSizePixel = 0
-        Frame.Position = UDim2.new(0.0170000009, 0, 0.0359999985, 0)
-        Frame.Size = UDim2.new(0, 399, 0, 310) -- Увеличенная высота
-        Frame.CanvasSize = UDim2.new(0, 0, 1.5, 0) -- Больше места для прокрутки
+        Frame.Position = UDim2.new(0.017, 0, 0.035, 0)
+        Frame.Size = UDim2.new(0, 460, 0, 400) -- Больше
+        Frame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Больше места для прокрутки
         Frame.ScrollBarImageColor3 = theme2
-        Frame.ScrollBarThickness = 7
+        Frame.ScrollBarThickness = 8 -- Толще скроллбар
 
         UICorner.Parent = Frame
 
         UIGridLayout_2.Parent = Frame
         UIGridLayout_2.FillDirection = Enum.FillDirection.Vertical
         UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-        UIGridLayout_2.CellSize = UDim2.new(0, 70, 0, 23)
+        UIGridLayout_2.CellSize = UDim2.new(0, 100, 0, 25) -- Больше ячейки
         UIGridLayout_2.StartCorner = Enum.StartCorner.TopRight
 
         Frame.ChildAdded:Connect(function()
-            if #Frame:GetChildren() > 13 then
-                Frame.CanvasSize = UDim2.new(0, 0, Frame.CanvasSize.Y.Scale + 0.10, 0)
+            if #Frame:GetChildren() > 15 then
+                Frame.CanvasSize = UDim2.new(0, 0, Frame.CanvasSize.Y.Scale + 0.15, 0)
             end
         end)
 
@@ -272,11 +272,11 @@ local toolight = false
             Dropdown.Parent = Frame
             Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Dropdown.BackgroundTransparency = 1.000
-            Dropdown.Size = UDim2.new(0, 200, 0, 50)
+            Dropdown.Size = UDim2.new(0, 220, 0, 50) -- Больше
             Dropdown.Font = Enum.Font.SourceSansSemibold
             Dropdown.Text = text
             Dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Dropdown.TextSize = 14.000
+            Dropdown.TextSize = 15.000 -- Больше текст
 
             TextButton.Parent = Dropdown
             TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -284,12 +284,12 @@ local toolight = false
             TextButton.BorderColor3 = Color3.fromRGB(27, 42, 53)
             TextButton.BorderSizePixel = 0
             TextButton.Position = UDim2.new(1, 0, 0, 0)
-            TextButton.Size = UDim2.new(0, 31, 0, 27)
+            TextButton.Size = UDim2.new(0, 40, 0, 30) -- Больше
             TextButton.ZIndex = 2
             TextButton.Font = Enum.Font.SourceSansBold
             TextButton.Text = "+"
             TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextButton.TextSize = 14.000
+            TextButton.TextSize = 15.000 -- Больше текст
 
             TextButton_Roundify_2px_2.Name = "TextButton_Roundify_2px"
             TextButton_Roundify_2px_2.Parent = TextButton
@@ -320,16 +320,16 @@ local toolight = false
             end)
 
             for i,v in pairs(list) do
-                BodyYSize = BodyYSize + 27
+                BodyYSize = BodyYSize + 30
                 local TextButton_2 = Instance.new("TextButton")
                 TextButton_2.Parent = DropdownContainer
                 TextButton_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 TextButton_2.BackgroundTransparency = 1.000
-                TextButton_2.Size = UDim2.new(0, 197, 0, 27)
+                TextButton_2.Size = UDim2.new(0, 230, 0, 30) -- Больше
                 TextButton_2.Font = Enum.Font.SourceSansSemibold
                 TextButton_2.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TextButton_2.Text = v
-                TextButton_2.TextSize = 14.000
+                TextButton_2.TextSize = 15.000 -- Больше текст
                 TextButton_2.ZIndex = 4
 
                 TextButton_2.MouseButton1Click:Connect(function()
@@ -344,8 +344,8 @@ local toolight = false
             DropdownContainer.Parent = TextButton
             DropdownContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             DropdownContainer.BackgroundTransparency = 1.000
-            DropdownContainer.Position = UDim2.new(1.46359456, 0, 0, 0)
-            DropdownContainer.Size = UDim2.new(0, 197, 0, BodyYSize)
+            DropdownContainer.Position = UDim2.new(1.5, 0, 0, 0)
+            DropdownContainer.Size = UDim2.new(0, 230, 0, BodyYSize) -- Больше
             DropdownContainer.Image = "rbxassetid://3570695787"
             DropdownContainer.ImageColor3 = theme2
             DropdownContainer.Visible = false
@@ -380,18 +380,18 @@ local toolight = false
             Slider.Parent = Frame
             Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Slider.BackgroundTransparency = 1.000
-            Slider.Size = UDim2.new(0, 200, 0, 50)
+            Slider.Size = UDim2.new(0, 220, 0, 50) -- Больше
             Slider.Font = Enum.Font.SourceSansSemibold
             Slider.Text = text
             Slider.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Slider.TextSize = 14.000
+            Slider.TextSize = 15.000 -- Больше текст
             
             Frame_3.Name = "Frame"
             Frame_3.Parent = Slider
             Frame_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Frame_3.BackgroundTransparency = 1.000
-            Frame_3.Position = UDim2.new(1, 0, 0.395000011, 0)
-            Frame_3.Size = UDim2.new(0, 148, 0, 8)
+            Frame_3.Position = UDim2.new(1, 0, 0.395, 0)
+            Frame_3.Size = UDim2.new(0, 180, 0, 10) -- Больше
             Frame_3.Image = "rbxassetid://3570695787"
             Frame_3.ImageColor3 = theme2
             Frame_3.ScaleType = Enum.ScaleType.Slice
@@ -403,8 +403,8 @@ local toolight = false
             SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             SliderButton.BackgroundTransparency = 1.000
             SliderButton.BorderSizePixel = 0
-            SliderButton.Position = UDim2.new(1, 0, 0.391304344, 0)
-            SliderButton.Size = UDim2.new(0, 148, 0, 8)
+            SliderButton.Position = UDim2.new(1, 0, 0.391, 0)
+            SliderButton.Size = UDim2.new(0, 180, 0, 10) -- Больше
             SliderButton.Font = Enum.Font.SourceSans
             SliderButton.Text = ""
             SliderButton.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -429,7 +429,7 @@ local toolight = false
             SliderInner.Parent = SliderButton
             SliderInner.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             SliderInner.BackgroundTransparency = 1.000
-            SliderInner.Size = UDim2.new(0, 0, 0, 8)
+            SliderInner.Size = UDim2.new(0, 0, 0, 10) -- Больше
             SliderInner.Image = "rbxassetid://3570695787"
             SliderInner.ImageColor3 = theme3
             SliderInner.ScaleType = Enum.ScaleType.Slice
@@ -440,36 +440,36 @@ local toolight = false
             TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             TextLabel_2.BackgroundTransparency = 1.000
             TextLabel_2.BorderSizePixel = 2
-            TextLabel_2.Position = UDim2.new(3.10714293, 0, 0.4, 0)
-            TextLabel_2.Size = UDim2.new(0, 33, 0, 7)
+            TextLabel_2.Position = UDim2.new(3.1, 0, 0.4, 0)
+            TextLabel_2.Size = UDim2.new(0, 40, 0, 10) -- Больше
             TextLabel_2.Font = Enum.Font.SourceSansBold
             TextLabel_2.Text = tostring(minvalue)
             TextLabel_2.TextColor3 = theme3
-            TextLabel_2.TextSize = 13.000
+            TextLabel_2.TextSize = 15.000 -- Больше текст
             TextLabel_2.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
 
             SliderButton.MouseButton1Down:Connect(function()
-                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 148) * SliderInner.AbsoluteSize.X) + tonumber(minvalue)) or 0
+                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue)) or 0
                 pcall(function()
                     callback(Value)
                     TextLabel_2.Text = Value
                 end)
-                SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 148), 0, 8)
+                SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
                 moveconnection = mouse.Move:Connect(function()
-                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 148) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
+                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
                     pcall(function()
                         callback(Value)
                         TextLabel_2.Text = Value
                     end)
-                    SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 148), 0, 8)
+                    SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
                 end)
                 releaseconnection = uis.InputEnded:Connect(function(Mouse)
                     if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
-                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 148) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
+                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
                         pcall(function()
                             callback(Value)
                         end)
-                        SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 148), 0, 8)
+                        SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
                         moveconnection:Disconnect()
                         releaseconnection:Disconnect()
                     end
@@ -498,18 +498,18 @@ local toolight = false
             Toggle_2.Parent = Frame
             Toggle_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Toggle_2.BackgroundTransparency = 1.000
-            Toggle_2.Size = UDim2.new(0, 200, 0, 50)
+            Toggle_2.Size = UDim2.new(0, 220, 0, 50) -- Больше
             Toggle_2.Font = Enum.Font.SourceSansSemibold
             Toggle_2.Text = text
             Toggle_2.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Toggle_2.TextSize = 14.000
+            Toggle_2.TextSize = 15.000 -- Больше текст
 
             Frame_t.Name = "Frame"
             Frame_t.Parent = Toggle_2
             Frame_t.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Frame_t.BackgroundTransparency = 1.000
-            Frame_t.Position = UDim2.new(1, 0, 0.333333343, 0)
-            Frame_t.Size = UDim2.new(0, 27, 0, 13)
+            Frame_t.Position = UDim2.new(1, 0, 0.333, 0)
+            Frame_t.Size = UDim2.new(0, 35, 0, 15) -- Больше
             Frame_t.Image = "rbxassetid://3570695787"
             Frame_t.ImageColor3 = theme2
             Frame_t.ScaleType = Enum.ScaleType.Slice
@@ -520,8 +520,8 @@ local toolight = false
             Frame_2.Parent = Frame_t
             Frame_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Frame_2.BackgroundTransparency = 1.000
-            Frame_2.Position = UDim2.new(0, 3, 0.150000006, 0)
-            Frame_2.Size = UDim2.new(0, 9, 0, 9)
+            Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
+            Frame_2.Size = UDim2.new(0, 12, 0, 12) -- Больше
             Frame_2.Image = "rbxassetid://3570695787"
             Frame_2.ScaleType = Enum.ScaleType.Slice
             Frame_2.SliceCenter = Rect.new(100, 100, 100, 100)
@@ -531,8 +531,8 @@ local toolight = false
             ToggleButton.Parent = Toggle_2
             ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ToggleButton.BackgroundTransparency = 1.000
-            ToggleButton.Position = UDim2.new(1, 0, 0.333333552, 0)
-            ToggleButton.Size = UDim2.new(0, 27, 0, 15)
+            ToggleButton.Position = UDim2.new(1, 0, 0.333, 0)
+            ToggleButton.Size = UDim2.new(0, 35, 0, 15) -- Больше
             ToggleButton.Font = Enum.Font.SourceSans
             ToggleButton.Text = ""
             ToggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -548,13 +548,13 @@ local toolight = false
                     if toolight then
                         Frame_2.ImageColor3 = Color3.fromRGB(26,26,26)
                     end
-                    Frame_2.Position = UDim2.new(0.59, 0, 0.150000006, 0)
+                    Frame_2.Position = UDim2.new(0.59, 0, 0.15, 0)
                 else
                     Frame_t.ImageColor3 = theme2
                     if toolight then
                         Frame_2.ImageColor3 = theme3
                     end
-                    Frame_2.Position = UDim2.new(0, 3, 0.150000006, 0)
+                    Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
                 end
             end
 
@@ -567,13 +567,13 @@ local toolight = false
                     if toolight then
                         Frame_2.ImageColor3 = Color3.fromRGB(26,26,26)
                     end
-                    Frame_2.Position = UDim2.new(0.59, 0, 0.150000006, 0)
+                    Frame_2.Position = UDim2.new(0.59, 0, 0.15, 0)
                 else
                     Frame_t.ImageColor3 = theme2
                     if toolight then
                         Frame_2.ImageColor3 = theme3
                     end
-                    Frame_2.Position = UDim2.new(0, 3, 0.150000006, 0)
+                    Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
                 end
                 pcall(callback,enabled)
             end
@@ -590,18 +590,18 @@ local toolight = false
             Cheat.Parent = Frame
             Cheat.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Cheat.BackgroundTransparency = 1.000
-            Cheat.Size = UDim2.new(0, 200, 0, 50)
+            Cheat.Size = UDim2.new(0, 220, 0, 50) -- Больше
             Cheat.Text = text
             Cheat.Font = Enum.Font.SourceSansSemibold
             Cheat.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Cheat.TextSize = 14.000
+            Cheat.TextSize = 15.000 -- Больше текст
             
             MainCheatFrame.Name = "MainCheatFrame"
             MainCheatFrame.Parent = Cheat
             MainCheatFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             MainCheatFrame.BackgroundTransparency = 1.000
-            MainCheatFrame.Position = UDim2.new(1, 0, 0.129999995, 0)
-            MainCheatFrame.Size = UDim2.new(0, 18, 0, 18)
+            MainCheatFrame.Position = UDim2.new(1, 0, 0.13, 0)
+            MainCheatFrame.Size = UDim2.new(0, 25, 0, 25) -- Больше
             MainCheatFrame.Image = "rbxassetid://3570695787"
             MainCheatFrame.ImageColor3 = theme2
             MainCheatFrame.ScaleType = Enum.ScaleType.Slice
@@ -614,7 +614,7 @@ local toolight = false
             InsideCheatFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             InsideCheatFrame.BackgroundTransparency = 1.000
             InsideCheatFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-            InsideCheatFrame.Size = UDim2.new(0, 14, 0, 14)
+            InsideCheatFrame.Size = UDim2.new(0, 20, 0, 20) -- Больше
             InsideCheatFrame.Image = "rbxassetid://3570695787"
             InsideCheatFrame.ImageColor3 = theme2
             InsideCheatFrame.ScaleType = Enum.ScaleType.Slice
@@ -624,7 +624,7 @@ local toolight = false
             CheatButton.Parent = MainCheatFrame
             CheatButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             CheatButton.BackgroundTransparency = 1.000
-            CheatButton.Size = UDim2.new(0, 18, 0, 18)
+            CheatButton.Size = UDim2.new(0, 25, 0, 25) -- Больше
             CheatButton.Font = Enum.Font.SourceSans
             CheatButton.Text = ""
             CheatButton.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -656,13 +656,13 @@ local toolight = false
             Button.BackgroundColor3 = Color3.fromRGB(116, 116, 116)
             Button.BackgroundTransparency = 1.000
             Button.BorderSizePixel = 0
-            Button.Position = UDim2.new(-0.00554528646, 0, 0.0607142858, 0)
-            Button.Size = UDim2.new(0, 36, 0, 21)
+            Button.Position = UDim2.new(-0.005, 0, 0.06, 0)
+            Button.Size = UDim2.new(0, 45, 0, 25) -- Больше
             Button.ZIndex = 2
             Button.Font = Enum.Font.SourceSansSemibold
             Button.Text = text
             Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Button.TextSize = 14.000
+            Button.TextSize = 15.000 -- Больше текст
             
             Button_Roundify_3px.Name = "Button_Roundify_3px"
             Button_Roundify_3px.Parent = Button
@@ -692,11 +692,11 @@ local toolight = false
             Label.Parent = Frame
             Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Label.BackgroundTransparency = 1.000
-            Label.Size = UDim2.new(0, 200, 0, 50)
+            Label.Size = UDim2.new(0, 220, 0, 50) -- Больше
             Label.Font = Enum.Font.SourceSansSemibold
             Label.Text = text
             Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Label.TextSize = 14.000
+            Label.TextSize = 15.000 -- Больше текст
             Label.TextXAlignment = Enum.TextXAlignment.Left
         end
         
@@ -713,22 +713,22 @@ local toolight = false
             TextBoxContainer.Parent = Frame
             TextBoxContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             TextBoxContainer.BackgroundTransparency = 1.000
-            TextBoxContainer.Size = UDim2.new(0, 200, 0, 50)
+            TextBoxContainer.Size = UDim2.new(0, 220, 0, 50) -- Больше
             TextBoxContainer.Font = Enum.Font.SourceSansSemibold
             TextBoxContainer.Text = text
             TextBoxContainer.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextBoxContainer.TextSize = 14.000
+            TextBoxContainer.TextSize = 15.000 -- Больше текст
             
             TextBox.Parent = TextBoxContainer
             TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             TextBox.BackgroundTransparency = 1.000
             TextBox.Position = UDim2.new(1, 0, 0, 0)
-            TextBox.Size = UDim2.new(0, 100, 0, 20)
+            TextBox.Size = UDim2.new(0, 120, 0, 25) -- Больше
             TextBox.Font = Enum.Font.SourceSans
             TextBox.PlaceholderText = placeholder
             TextBox.Text = ""
             TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextBox.TextSize = 14.000
+            TextBox.TextSize = 15.000 -- Больше текст
             
             TextBox_Roundify.Name = "TextBox_Roundify"
             TextBox_Roundify.Parent = TextBox
