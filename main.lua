@@ -1,841 +1,759 @@
 local library = {}
-local tweenService = game:GetService("TweenService")
-local runService = game:GetService("RunService")
-local lighting = game:GetService("Lighting")
-local player = game.Players.LocalPlayer
-local mouse = player:GetMouse()
+function play(id)
+    for _, v in next, workspace:GetChildren() do
+        if v.Name == "GUISound" then
+            v:Destroy()
+        end
+    end
+    local Sound = Instance.new("Sound", workspace)
+    Sound.Name = "GUISound"
+    Sound.Volume = 6
+    Sound.SoundId = id
+    Sound:Play()
+ end
 
--- Эффект размытия фона
-local blurEffect = Instance.new("BlurEffect")
-blurEffect.Size = 0
-blurEffect.Parent = lighting
-
--- Звуковые эффекты
-local sounds = {
-    open = "rbxassetid://138080526",  -- Открытие
-    close = "rbxassetid://138080539", -- Закрытие
-    click = "rbxassetid://138080557", -- Клик
-    hover = "rbxassetid://138080573", -- Наведение
-    select = "rbxassetid://138080589" -- Выбор
-}
-
-local function playSound(id)
-    local sound = Instance.new("Sound")
-    sound.SoundId = id
-    sound.Volume = 0.5
-    sound.Parent = workspace
-    sound:Play()
-    game:GetService("Debris"):AddItem(sound, 2)
-end
-
--- Современные цветовые темы
-local themes = {
-    Cyberpunk = {
-        primary = Color3.fromRGB(138, 43, 226), -- Фиолетовый
-        secondary = Color3.fromRGB(25, 25, 35),
-        accent = Color3.fromRGB(0, 255, 255),
-        text = Color3.fromRGB(255, 255, 255)
-    },
-    Neon = {
-        primary = Color3.fromRGB(0, 255, 170),
-        secondary = Color3.fromRGB(15, 15, 25),
-        accent = Color3.fromRGB(255, 0, 170),
-        text = Color3.fromRGB(240, 240, 240)
-    },
-    Dark = {
-        primary = Color3.fromRGB(220, 20, 60),
-        secondary = Color3.fromRGB(20, 20, 30),
-        accent = Color3.fromRGB(70, 130, 180),
-        text = Color3.fromRGB(230, 230, 230)
-    },
-    Light = {
-        primary = Color3.fromRGB(65, 105, 225),
-        secondary = Color3.fromRGB(245, 245, 245),
-        accent = Color3.fromRGB(255, 140, 0),
-        text = Color3.fromRGB(40, 40, 40)
-    }
-}
-
-function library:CreateWindow(title, themeName)
-    local theme = themes[themeName] or themes.Cyberpunk
-    
-    -- Удаляем старые окна
-    for _, v in ipairs(game.CoreGui:GetChildren()) do
-        if v.Name == "ShadowUI" then
+function library:CreateWindow(name,theme)
+local theme1
+local theme2
+local theme3
+local toolight = false
+    for i,v in pairs(game.CoreGui:GetChildren()) do
+        if v.Name == "By Shaddow" then
             v:Destroy()
         end
     end
 
-    -- Создание главного контейнера
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "ShadowUI"
-    screenGui.Parent = game.CoreGui
-    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-
-    -- Фоновый эффект
-    local background = Instance.new("Frame")
-    background.Name = "Background"
-    background.BackgroundColor3 = Color3.new(0, 0, 0)
-    background.BackgroundTransparency = 0.8
-    background.Size = UDim2.new(1, 0, 1, 0)
-    background.Visible = false
-    background.Parent = screenGui
-
-    -- Главное окно
-    local mainWindow = Instance.new("Frame")
-    mainWindow.Name = "MainWindow"
-    mainWindow.BackgroundColor3 = theme.secondary
-    mainWindow.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
-    mainWindow.Size = UDim2.new(0, 500, 0, 0) -- Начнем с высоты 0
-    mainWindow.ClipsDescendants = true
-    mainWindow.Parent = screenGui
-
-    -- Закругление углов
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 12)
-    corner.Parent = mainWindow
-
-    -- Тень
-    local shadow = Instance.new("ImageLabel")
-    shadow.Name = "Shadow"
-    shadow.Image = "rbxassetid://5554236805"
-    shadow.ScaleType = Enum.ScaleType.Slice
-    shadow.SliceCenter = Rect.new(23, 23, 277, 277)
-    shadow.ImageTransparency = 0.5
-    shadow.Size = UDim2.new(1, 30, 1, 30)
-    shadow.Position = UDim2.new(0, -15, 0, -15)
-    shadow.BackgroundTransparency = 1
-    shadow.ZIndex = -1
-    shadow.Parent = mainWindow
-
-    -- Заголовок
-    local header = Instance.new("Frame")
-    header.Name = "Header"
-    header.BackgroundColor3 = theme.primary
-    header.Size = UDim2.new(1, 0, 0, 40)
-    header.Parent = mainWindow
-
-    local headerCorner = Instance.new("UICorner")
-    headerCorner.CornerRadius = UDim.new(0, 12)
-    headerCorner.Parent = header
-
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Name = "Title"
-    titleLabel.Text = title
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextSize = 18
-    titleLabel.TextColor3 = theme.text
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Position = UDim2.new(0, 15, 0, 0)
-    titleLabel.Size = UDim2.new(0.7, 0, 1, 0)
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Parent = header
-
-    -- Кнопка закрытия
-    local closeButton = Instance.new("ImageButton")
-    closeButton.Name = "CloseButton"
-    closeButton.Image = "rbxassetid://3926305904"
-    closeButton.ImageRectOffset = Vector2.new(284, 4)
-    closeButton.ImageRectSize = Vector2.new(24, 24)
-    closeButton.ImageColor3 = theme.text
-    closeButton.BackgroundTransparency = 1
-    closeButton.Position = UDim2.new(0.9, 0, 0.2, 0)
-    closeButton.Size = UDim2.new(0, 25, 0, 25)
-    closeButton.Parent = header
-
-    -- Контейнер вкладок
-    local tabContainer = Instance.new("Frame")
-    tabContainer.Name = "TabContainer"
-    tabContainer.BackgroundTransparency = 1
-    tabContainer.Size = UDim2.new(1, -30, 0, 40)
-    tabContainer.Position = UDim2.new(0, 15, 0, 45)
-    tabContainer.Parent = mainWindow
-
-    -- Индикатор активной вкладки
-    local tabIndicator = Instance.new("Frame")
-    tabIndicator.Name = "TabIndicator"
-    tabIndicator.BackgroundColor3 = theme.accent
-    tabIndicator.Size = UDim2.new(0, 100, 0, 3)
-    tabIndicator.Position = UDim2.new(0, 0, 1, -3)
-    tabIndicator.BorderSizePixel = 0
-    tabIndicator.ZIndex = 2
-    tabIndicator.Parent = tabContainer
-
-    -- Контейнер контента
-    local contentContainer = Instance.new("Frame")
-    contentContainer.Name = "Content"
-    contentContainer.BackgroundTransparency = 1
-    contentContainer.Size = UDim2.new(1, -30, 1, -90)
-    contentContainer.Position = UDim2.new(0, 15, 0, 90)
-    contentContainer.ClipsDescendants = true
-    contentContainer.Parent = mainWindow
-
-    -- Анимация открытия
-    local openTween = tweenService:Create(
-        mainWindow,
-        TweenInfo.new(0.6, Enum.EasingStyle.Quint),
-        {Size = UDim2.new(0, 500, 0, 400)}
-    )
-    
-    local blurTween = tweenService:Create(
-        blurEffect,
-        TweenInfo.new(0.8),
-        {Size = 12}
-    )
-    
-    background.Visible = true
-    openTween:Play()
-    blurTween:Play()
-    playSound(sounds.open)
-    
-    -- Анимация закрытия
-    closeButton.MouseButton1Click:Connect(function()
-        playSound(sounds.close)
-        local closeTween = tweenService:Create(
-            mainWindow,
-            TweenInfo.new(0.5, Enum.EasingStyle.Quint),
-            {Size = UDim2.new(0, 500, 0, 0)}
-        )
-        
-        local unblurTween = tweenService:Create(
-            blurEffect,
-            TweenInfo.new(0.6),
-            {Size = 0}
-        )
-        
-        closeTween:Play()
-        unblurTween:Play()
-        
-        closeTween.Completed:Wait()
-        screenGui:Destroy()
-    end)
-
-    -- Эффект перетаскивания
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
-
-    header.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = mainWindow.Position
-            
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    header.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging and input == dragInput then
-            local delta = input.Position - dragStart
-            mainWindow.Position = UDim2.new(
-                startPos.X.Scale, 
-                startPos.X.Offset + delta.X, 
-                startPos.Y.Scale, 
-                startPos.Y.Offset + delta.Y
-            )
-        end
-    end)
-
-    local tabContents = {}
-    local tabButtons = {}
-    local tabIndex = 1
-
-    local lib = {}
-
-    function lib:CreateTab(name, icon)
-        local tabId = #tabButtons + 1
-        
-        -- Создание кнопки вкладки
-        local tabButton = Instance.new("TextButton")
-        tabButton.Name = name.."Tab"
-        tabButton.Text = name
-        tabButton.Font = Enum.Font.GothamMedium
-        tabButton.TextSize = 14
-        tabButton.TextColor3 = theme.text
-        tabButton.BackgroundTransparency = 1
-        tabButton.Size = UDim2.new(0, 100, 1, 0)
-        tabButton.Position = UDim2.new(0, (#tabButtons * 110), 0, 0)
-        tabButton.AutoButtonColor = false
-        tabButton.Parent = tabContainer
-        
-        -- Иконка вкладки
-        if icon then
-            local iconImage = Instance.new("ImageLabel")
-            iconImage.Image = icon
-            iconImage.Size = UDim2.new(0, 20, 0, 20)
-            iconImage.Position = UDim2.new(0.5, -25, 0.5, -10)
-            iconImage.BackgroundTransparency = 1
-            iconImage.Parent = tabButton
-            
-            tabButton.TextXAlignment = Enum.TextXAlignment.Left
-            tabButton.PaddingLeft = UDim.new(0, 25)
-        end
-        
-        -- Эффекты при наведении
-        tabButton.MouseEnter:Connect(function()
-            if tabId ~= tabIndex then
-                playSound(sounds.hover)
-                tweenService:Create(
-                    tabButton,
-                    TweenInfo.new(0.2),
-                    {TextColor3 = theme.accent}
-                ):Play()
-            end
-        end)
-        
-        tabButton.MouseLeave:Connect(function()
-            if tabId ~= tabIndex then
-                tweenService:Create(
-                    tabButton,
-                    TweenInfo.new(0.2),
-                    {TextColor3 = theme.text}
-                ):Play()
-            end
-        end)
-        
-        -- Создание контента вкладки
-        local tabContent = Instance.new("ScrollingFrame")
-        tabContent.Name = name.."Content"
-        tabContent.BackgroundTransparency = 1
-        tabContent.Size = UDim2.new(1, 0, 1, 0)
-        tabContent.Visible = false
-        tabContent.ScrollBarImageColor3 = theme.accent
-        tabContent.ScrollBarThickness = 4
-        tabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
-        tabContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
-        tabContent.Parent = contentContainer
-        
-        local contentLayout = Instance.new("UIListLayout")
-        contentLayout.Padding = UDim.new(0, 15)
-        contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        contentLayout.Parent = tabContent
-        
-        -- Сохраняем ссылки
-        tabContents[tabId] = tabContent
-        tabButtons[tabId] = tabButton
-        
-        -- Обработчик клика
-        tabButton.MouseButton1Click:Connect(function()
-            playSound(sounds.select)
-            tabIndex = tabId
-            
-            -- Анимация индикатора
-            tweenService:Create(
-                tabIndicator,
-                TweenInfo.new(0.3, Enum.EasingStyle.Quint),
-                {Position = UDim2.new(0, tabButton.Position.X.Offset, 1, -3)}
-            ):Play()
-            
-            -- Обновление цвета кнопок
-            for i, btn in ipairs(tabButtons) do
-                if i == tabId then
-                    tweenService:Create(
-                        btn,
-                        TweenInfo.new(0.2),
-                        {TextColor3 = theme.accent}
-                    ):Play()
-                else
-                    tweenService:Create(
-                        btn,
-                        TweenInfo.new(0.2),
-                        {TextColor3 = theme.text}
-                    ):Play()
-                end
-            end
-            
-            -- Переключение контента
-            for i, content in ipairs(tabContents) do
-                content.Visible = (i == tabId)
-            end
-        end)
-        
-        -- Активируем первую вкладку
-        if #tabButtons == 1 then
-            tabButton.TextColor3 = theme.accent
-            tabContent.Visible = true
-        end
-
-        local tabLib = {}
-        
-        -- Функция создания секции
-        function tabLib:CreateSection(title)
-            local section = Instance.new("Frame")
-            section.Name = "Section"
-            section.BackgroundTransparency = 1
-            section.Size = UDim2.new(1, 0, 0, 40)
-            section.LayoutOrder = #tabContent:GetChildren() + 1
-            section.Parent = tabContent
-            
-            local sectionTitle = Instance.new("TextLabel")
-            sectionTitle.Name = "Title"
-            sectionTitle.Text = string.upper(title)
-            sectionTitle.Font = Enum.Font.GothamBold
-            sectionTitle.TextSize = 14
-            sectionTitle.TextColor3 = theme.accent
-            sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
-            sectionTitle.BackgroundTransparency = 1
-            sectionTitle.Size = UDim2.new(1, 0, 1, 0)
-            sectionTitle.Parent = section
-            
-            local divider = Instance.new("Frame")
-            divider.Name = "Divider"
-            divider.BackgroundColor3 = theme.primary
-            divider.BorderSizePixel = 0
-            divider.Size = UDim2.new(1, 0, 0, 1)
-            divider.Position = UDim2.new(0, 0, 1, -5)
-            divider.Parent = section
-            
-            return section
-        end
-        
-        -- Функция создания кнопки
-        function tabLib:CreateButton(text, callback)
-            local button = Instance.new("TextButton")
-            button.Name = "Button"
-            button.Text = text
-            button.Font = Enum.Font.GothamMedium
-            button.TextSize = 14
-            button.TextColor3 = theme.text
-            button.BackgroundColor3 = theme.primary
-            button.AutoButtonColor = false
-            button.Size = UDim2.new(1, 0, 0, 35)
-            button.LayoutOrder = #tabContent:GetChildren() + 1
-            button.Parent = tabContent
-            
-            local corner = Instance.new("UICorner")
-            corner.CornerRadius = UDim.new(0, 8)
-            corner.Parent = button
-            
-            -- Анимации кнопки
-            button.MouseEnter:Connect(function()
-                playSound(sounds.hover)
-                tweenService:Create(
-                    button,
-                    TweenInfo.new(0.2),
-                    {BackgroundColor3 = theme.accent}
-                ):Play()
-            end)
-            
-            button.MouseLeave:Connect(function()
-                tweenService:Create(
-                    button,
-                    TweenInfo.new(0.2),
-                    {BackgroundColor3 = theme.primary}
-                ):Play()
-            end)
-            
-            button.MouseButton1Down:Connect(function()
-                tweenService:Create(
-                    button,
-                    TweenInfo.new(0.1),
-                    {Size = UDim2.new(0.98, 0, 0, 33)}
-                ):Play()
-            end)
-            
-            button.MouseButton1Up:Connect(function()
-                tweenService:Create(
-                    button,
-                    TweenInfo.new(0.1),
-                    {Size = UDim2.new(1, 0, 0, 35)}
-                ):Play()
-            end)
-            
-            button.MouseButton1Click:Connect(function()
-                playSound(sounds.click)
-                if callback then callback() end
-                
-                -- Эффект пульсации
-                local ripple = Instance.new("Frame")
-                ripple.BackgroundColor3 = Color3.new(1, 1, 1)
-                ripple.BackgroundTransparency = 0.8
-                ripple.Size = UDim2.new(0, 0, 0, 0)
-                ripple.Position = UDim2.new(0.5, 0, 0.5, 0)
-                ripple.AnchorPoint = Vector2.new(0.5, 0.5)
-                ripple.ZIndex = 2
-                ripple.Parent = button
-                
-                local rippleCorner = Instance.new("UICorner")
-                rippleCorner.CornerRadius = UDim.new(1, 0)
-                rippleCorner.Parent = ripple
-                
-                tweenService:Create(
-                    ripple,
-                    TweenInfo.new(0.6),
-                    {
-                        Size = UDim2.new(2, 0, 5, 0),
-                        BackgroundTransparency = 1
-                    }
-                ):Play()
-                
-                game:GetService("Debris"):AddItem(ripple, 0.6)
-            end)
-            
-            return button
-        end
-        
-        -- Функция создания переключателя
-        function tabLib:CreateToggle(text, default, callback)
-            local toggle = Instance.new("Frame")
-            toggle.Name = "Toggle"
-            toggle.BackgroundTransparency = 1
-            toggle.Size = UDim2.new(1, 0, 0, 30)
-            toggle.LayoutOrder = #tabContent:GetChildren() + 1
-            toggle.Parent = tabContent
-            
-            local label = Instance.new("TextLabel")
-            label.Name = "Label"
-            label.Text = text
-            label.Font = Enum.Font.GothamMedium
-            label.TextSize = 14
-            label.TextColor3 = theme.text
-            label.TextXAlignment = Enum.TextXAlignment.Left
-            label.BackgroundTransparency = 1
-            label.Size = UDim2.new(0.7, 0, 1, 0)
-            label.Parent = toggle
-            
-            local toggleButton = Instance.new("Frame")
-            toggleButton.Name = "ToggleButton"
-            toggleButton.BackgroundColor3 = theme.primary
-            toggleButton.Size = UDim2.new(0, 50, 0, 25)
-            toggleButton.Position = UDim2.new(1, -50, 0.5, -12.5)
-            toggleButton.AnchorPoint = Vector2.new(1, 0.5)
-            toggleButton.Parent = toggle
-            
-            local toggleCorner = Instance.new("UICorner")
-            toggleCorner.CornerRadius = UDim.new(1, 0)
-            toggleCorner.Parent = toggleButton
-            
-            local toggleDot = Instance.new("Frame")
-            toggleDot.Name = "Dot"
-            toggleDot.BackgroundColor3 = theme.text
-            toggleDot.Size = UDim2.new(0, 19, 0, 19)
-            toggleDot.Position = UDim2.new(0, 3, 0.5, -9.5)
-            toggleDot.AnchorPoint = Vector2.new(0, 0.5)
-            toggleDot.Parent = toggleButton
-            
-            local dotCorner = Instance.new("UICorner")
-            dotCorner.CornerRadius = UDim.new(1, 0)
-            dotCorner.Parent = toggleDot
-            
-            local state = default or false
-            
-            local function updateToggle()
-                if state then
-                    tweenService:Create(
-                        toggleDot,
-                        TweenInfo.new(0.3, Enum.EasingStyle.Quint),
-                        {Position = UDim2.new(1, -22, 0.5, -9.5)}
-                    ):Play()
-                    tweenService:Create(
-                        toggleButton,
-                        TweenInfo.new(0.3),
-                        {BackgroundColor3 = theme.accent}
-                    ):Play()
-                else
-                    tweenService:Create(
-                        toggleDot,
-                        TweenInfo.new(0.3, Enum.EasingStyle.Quint),
-                        {Position = UDim2.new(0, 3, 0.5, -9.5)}
-                    ):Play()
-                    tweenService:Create(
-                        toggleButton,
-                        TweenInfo.new(0.3),
-                        {BackgroundColor3 = theme.primary}
-                    ):Play()
-                end
-                
-                if callback then callback(state) end
-            end
-            
-            updateToggle()
-            
-            toggleButton.MouseButton1Click:Connect(function()
-                playSound(sounds.click)
-                state = not state
-                updateToggle()
-            end)
-            
-            return {
-                Set = function(_, value)
-                    state = value
-                    updateToggle()
-                end
-            }
-        end
-        
-        -- Функция создания слайдера
-        function tabLib:CreateSlider(text, min, max, default, callback)
-            local slider = Instance.new("Frame")
-            slider.Name = "Slider"
-            slider.BackgroundTransparency = 1
-            slider.Size = UDim2.new(1, 0, 0, 60)
-            slider.LayoutOrder = #tabContent:GetChildren() + 1
-            slider.Parent = tabContent
-            
-            local label = Instance.new("TextLabel")
-            label.Name = "Label"
-            label.Text = text
-            label.Font = Enum.Font.GothamMedium
-            label.TextSize = 14
-            label.TextColor3 = theme.text
-            label.TextXAlignment = Enum.TextXAlignment.Left
-            label.BackgroundTransparency = 1
-            label.Size = UDim2.new(1, 0, 0, 20)
-            label.Parent = slider
-            
-            local valueLabel = Instance.new("TextLabel")
-            valueLabel.Name = "Value"
-            valueLabel.Text = tostring(default or min)
-            valueLabel.Font = Enum.Font.GothamMedium
-            valueLabel.TextSize = 14
-            valueLabel.TextColor3 = theme.accent
-            valueLabel.TextXAlignment = Enum.TextXAlignment.Right
-            valueLabel.BackgroundTransparency = 1
-            valueLabel.Size = UDim2.new(1, 0, 0, 20)
-            valueLabel.Parent = slider
-            
-            local track = Instance.new("Frame")
-            track.Name = "Track"
-            track.BackgroundColor3 = theme.primary
-            track.Size = UDim2.new(1, 0, 0, 6)
-            track.Position = UDim2.new(0, 0, 0, 35)
-            track.Parent = slider
-            
-            local trackCorner = Instance.new("UICorner")
-            trackCorner.CornerRadius = UDim.new(1, 0)
-            trackCorner.Parent = track
-            
-            local fill = Instance.new("Frame")
-            fill.Name = "Fill"
-            fill.BackgroundColor3 = theme.accent
-            fill.Size = UDim2.new(0, 0, 1, 0)
-            fill.Parent = track
-            
-            local fillCorner = Instance.new("UICorner")
-            fillCorner.CornerRadius = UDim.new(1, 0)
-            fillCorner.Parent = fill
-            
-            local dot = Instance.new("Frame")
-            dot.Name = "Dot"
-            dot.BackgroundColor3 = theme.text
-            dot.Size = UDim2.new(0, 16, 0, 16)
-            dot.Position = UDim2.new(0, -8, 0.5, -8)
-            dot.AnchorPoint = Vector2.new(0, 0.5)
-            dot.Parent = fill
-            
-            local dotCorner = Instance.new("UICorner")
-            dotCorner.CornerRadius = UDim.new(1, 0)
-            dotCorner.Parent = dot
-            
-            local currentValue = default or min
-            local dragging = false
-            
-            local function updateSlider(value)
-                currentValue = math.clamp(value, min, max)
-                valueLabel.Text = string.format("%.1f", currentValue)
-                local percent = (currentValue - min) / (max - min)
-                fill.Size = UDim2.new(percent, 0, 1, 0)
-                
-                if callback then callback(currentValue) end
-            end
-            
-            updateSlider(currentValue)
-            
-            local function updateFromMouse()
-                local mousePos = game:GetService("UserInputService"):GetMouseLocation()
-                local trackPos = track.AbsolutePosition
-                local trackSize = track.AbsoluteSize.X
-                
-                local relativeX = math.clamp(mousePos.X - trackPos.X, 0, trackSize)
-                local percent = relativeX / trackSize
-                
-                updateSlider(min + (max - min) * percent)
-            end
-            
-            track.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    dragging = true
-                    updateFromMouse()
-                end
-            end)
-            
-            track.InputEnded:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    dragging = false
-                end
-            end)
-            
-            game:GetService("UserInputService").InputChanged:Connect(function(input)
-                if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-                    updateFromMouse()
-                end
-            end)
-            
-            return {
-                Set = function(_, value)
-                    updateSlider(value)
-                end
-            }
-        end
-        
-        -- Функция создания выпадающего списка
-        function tabLib:CreateDropdown(text, options, callback)
-            local dropdown = Instance.new("Frame")
-            dropdown.Name = "Dropdown"
-            dropdown.BackgroundTransparency = 1
-            dropdown.Size = UDim2.new(1, 0, 0, 40)
-            dropdown.LayoutOrder = #tabContent:GetChildren() + 1
-            dropdown.Parent = tabContent
-            
-            local label = Instance.new("TextLabel")
-            label.Name = "Label"
-            label.Text = text
-            label.Font = Enum.Font.GothamMedium
-            label.TextSize = 14
-            label.TextColor3 = theme.text
-            label.TextXAlignment = Enum.TextXAlignment.Left
-            label.BackgroundTransparency = 1
-            label.Size = UDim2.new(0.5, 0, 1, 0)
-            label.Parent = dropdown
-            
-            local button = Instance.new("TextButton")
-            button.Name = "Button"
-            button.Text = "Select..."
-            button.Font = Enum.Font.GothamMedium
-            button.TextSize = 14
-            button.TextColor3 = theme.text
-            button.BackgroundColor3 = theme.primary
-            button.AutoButtonColor = false
-            button.Size = UDim2.new(0.5, 0, 0, 35)
-            button.Position = UDim2.new(0.5, 0, 0, 0)
-            button.Parent = dropdown
-            
-            local buttonCorner = Instance.new("UICorner")
-            buttonCorner.CornerRadius = UDim.new(0, 8)
-            buttonCorner.Parent = button
-            
-            local arrow = Instance.new("ImageLabel")
-            arrow.Name = "Arrow"
-            arrow.Image = "rbxassetid://3926305904"
-            arrow.ImageRectOffset = Vector2.new(884, 4)
-            arrow.ImageRectSize = Vector2.new(24, 24)
-            arrow.ImageColor3 = theme.text
-            arrow.Size = UDim2.new(0, 20, 0, 20)
-            arrow.Position = UDim2.new(1, -25, 0.5, -10)
-            arrow.AnchorPoint = Vector2.new(1, 0.5)
-            arrow.BackgroundTransparency = 1
-            arrow.Parent = button
-            
-            local dropdownContent = Instance.new("Frame")
-            dropdownContent.Name = "DropdownContent"
-            dropdownContent.BackgroundColor3 = theme.secondary
-            dropdownContent.Size = UDim2.new(0.5, 0, 0, 0)
-            dropdownContent.Position = UDim2.new(0.5, 0, 1, 5)
-            dropdownContent.Visible = false
-            dropdownContent.ClipsDescendants = true
-            dropdownContent.Parent = dropdown
-            
-            local contentCorner = Instance.new("UICorner")
-            contentCorner.CornerRadius = UDim.new(0, 8)
-            contentCorner.Parent = dropdownContent
-            
-            local contentLayout = Instance.new("UIListLayout")
-            contentLayout.Padding = UDim.new(0, 5)
-            contentLayout.Parent = dropdownContent
-            
-            local contentPadding = Instance.new("UIPadding")
-            contentPadding.PaddingTop = UDim.new(0, 5)
-            contentPadding.PaddingBottom = UDim.new(0, 5)
-            contentPadding.Parent = dropdownContent
-            
-            -- Создание элементов списка
-            for i, option in ipairs(options) do
-                local optionButton = Instance.new("TextButton")
-                optionButton.Name = option
-                optionButton.Text = option
-                optionButton.Font = Enum.Font.GothamMedium
-                optionButton.TextSize = 14
-                optionButton.TextColor3 = theme.text
-                optionButton.BackgroundTransparency = 1
-                optionButton.Size = UDim2.new(1, -10, 0, 30)
-                optionButton.Position = UDim2.new(0, 5, 0, 0)
-                optionButton.AutoButtonColor = false
-                optionButton.Parent = dropdownContent
-                
-                optionButton.MouseEnter:Connect(function()
-                    tweenService:Create(
-                        optionButton,
-                        TweenInfo.new(0.2),
-                        {BackgroundColor3 = theme.primary}
-                    ):Play()
-                end)
-                
-                optionButton.MouseLeave:Connect(function()
-                    tweenService:Create(
-                        optionButton,
-                        TweenInfo.new(0.2),
-                        {BackgroundColor3 = Color3.new()}
-                    ):Play()
-                end)
-                
-                optionButton.MouseButton1Click:Connect(function()
-                    playSound(sounds.select)
-                    button.Text = option
-                    dropdownContent.Visible = false
-                    if callback then callback(option) end
-                end)
-            end
-            
-            -- Обновление размера контента
-            contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-                dropdownContent.Size = UDim2.new(0.5, 0, 0, contentLayout.AbsoluteContentSize.Y + 10)
-            end)
-            
-            -- Переключение видимости
-            button.MouseButton1Click:Connect(function()
-                playSound(sounds.click)
-                dropdownContent.Visible = not dropdownContent.Visible
-                
-                if dropdownContent.Visible then
-                    tweenService:Create(
-                        arrow,
-                        TweenInfo.new(0.3),
-                        {Rotation = 180}
-                    ):Play()
-                else
-                    tweenService:Create(
-                        arrow,
-                        TweenInfo.new(0.3),
-                        {Rotation = 0}
-                    ):Play()
-                end
-            end)
-            
-            return {
-                Set = function(_, value)
-                    button.Text = value
-                    if callback then callback(value) end
-                end
-            }
-        end
-        
-        return tabLib
+    if theme == "Normal" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(176, 148, 255)
+        print("Theme selected: "..theme)
+    elseif theme == "Reverse" then
+        theme1 = Color3.fromRGB(26,26,26)
+        theme2 = Color3.fromRGB(32,32,32)
+        theme3 = Color3.fromRGB(176, 148, 255)
+        print("Theme selected: "..theme)
+    elseif theme == "Blood" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(138, 3, 3)
+        print("Theme selected: "..theme)
+    elseif theme == "Gainsboro" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(220, 220, 221)
+        toolight = true
+        print("Theme selected: "..theme)
+    elseif theme == "Canary" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(255, 253, 130)
+        print("Theme selected: "..theme)
+    elseif theme == "Emerald" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(68, 207, 108)
+        print("Theme selected: "..theme)
+    elseif theme == "Crimson" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(214, 40, 57)
+        print("Theme selected: "..theme)
+    elseif theme == "Deep Sea" then
+        theme1 = Color3.fromRGB(32,32,32)
+        theme2 = Color3.fromRGB(26,26,26)
+        theme3 = Color3.fromRGB(40, 81, 214)
+        print("Theme selected: "..theme)
     end
-    
-    return lib
-end
 
-return library
+    local Screen = Instance.new("ScreenGui")
+    local Top = Instance.new("ImageLabel")
+    local Toggle = Instance.new("ImageButton")
+    local Main = Instance.new("ImageLabel")
+    local Tabs = Instance.new("ImageLabel")
+    local UIGridLayout = Instance.new("UIGridLayout")
+    local TabContainer = Instance.new("Folder")
+    local Items = Instance.new("ImageLabel")
+    local TextLabel = Instance.new("TextLabel")
+    local Footer = Instance.new("ImageLabel")
+
+    --Properties:
+    Screen.Name = "By Shaddow"
+    Screen.Parent = game:WaitForChild("CoreGui")
+    Screen.Enabled = true
+
+    Top.Name = "Top"
+    Top.Parent = Screen
+    Top.AnchorPoint = Vector2.new(0.5, 0.5)
+    Top.BackgroundColor3 = Color3.fromRGB(33, 32, 49)
+    Top.BackgroundTransparency = 1.000
+    Top.Active = true
+    Top.Position = UDim2.new(0.5, 0, 0.2, 0)
+    Top.Size = UDim2.new(0, 650, 0, 30) -- Шире и выше
+    Top.Image = "rbxassetid://3570695787"
+    Top.ImageColor3 = theme1
+    Top.ScaleType = Enum.ScaleType.Slice
+    Top.SliceCenter = Rect.new(100, 100, 100, 100)
+    Top.SliceScale = 0.030
+    Top.Draggable = true
+
+    TextLabel.Parent = Top
+    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.Position = UDim2.new(0.035, 0, 0, 0)
+    TextLabel.Size = UDim2.new(0, 600, 0, 30)
+    TextLabel.Font = Enum.Font.SourceSansSemibold
+    TextLabel.Text = name
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextSize = 16.000 -- Больше текст
+
+    Toggle.Name = "Toggle"
+    Toggle.Parent = Top
+    Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Toggle.BackgroundTransparency = 1.000
+    Toggle.Position = UDim2.new(0.009, 0, 0.15, 0)
+    Toggle.Rotation = 90.000
+    Toggle.Size = UDim2.new(0, 20, 0, 20) -- Больше кнопка
+    Toggle.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    Toggle.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=4731371541"
+
+    Main.Name = "Main"
+    Main.Parent = Top
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Main.BackgroundTransparency = 1.000
+    Main.Position = UDim2.new(0.5, 0, 6.8, 0)
+    Main.Size = UDim2.new(0, 650, 0, 450) -- Значительно больше
+    Main.Image = "rbxassetid://3570695787"
+    Main.ImageColor3 = theme2
+    Main.ScaleType = Enum.ScaleType.Slice
+    Main.SliceCenter = Rect.new(100, 100, 100, 100)
+    Main.SliceScale = 0.030
+
+    Tabs.Name = "Tabs"
+    Tabs.Parent = TabContainer
+    Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Tabs.BackgroundTransparency = 1.000
+    Tabs.Position = UDim2.new(0.013, 0, 0.03, 0)
+    Tabs.Size = UDim2.new(0, 150, 0, 420) -- Шире и выше
+    Tabs.Image = "rbxassetid://3570695787"
+    Tabs.ImageColor3 = theme1
+    Tabs.ScaleType = Enum.ScaleType.Slice
+    Tabs.SliceCenter = Rect.new(100, 100, 100, 100)
+    Tabs.SliceScale = 0.020
+
+    UIGridLayout.Parent = Tabs
+    UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIGridLayout.CellSize = UDim2.new(0, 150, 0, 30) -- Шире кнопки вкладок
+
+    TabContainer.Name = "TabContainer"
+    TabContainer.Parent = Main
+
+    Items.Name = "Items"
+    Items.Parent = Main
+    Items.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Items.BackgroundTransparency = 1.000
+    Items.Position = UDim2.new(0.245, 0, 0.03, 0)
+    Items.Size = UDim2.new(0, 480, 0, 420) -- Шире и выше
+    Items.Image = "rbxassetid://3570695787"
+    Items.ImageColor3 = theme1
+    Items.ScaleType = Enum.ScaleType.Slice
+    Items.SliceCenter = Rect.new(100, 100, 100, 100)
+    Items.SliceScale = 0.020
+
+    -- Футер
+    Footer.Name = "Footer"
+    Footer.Parent = Main
+    Footer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Footer.BackgroundTransparency = 1.000
+    Footer.Position = UDim2.new(0.013, 0, 0.93, 0)
+    Footer.Size = UDim2.new(0, 624, 0, 25)
+    Footer.Image = "rbxassetid://3570695787"
+    Footer.ImageColor3 = theme1
+    Footer.ScaleType = Enum.ScaleType.Slice
+    Footer.SliceCenter = Rect.new(100, 100, 100, 100)
+    Footer.SliceScale = 0.020
+    
+    local FooterText = Instance.new("TextLabel")
+    FooterText.Parent = Footer
+    FooterText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    FooterText.BackgroundTransparency = 1.000
+    FooterText.Size = UDim2.new(1, 0, 1, 0)
+    FooterText.Font = Enum.Font.SourceSansSemibold
+    FooterText.Text = "Shaddow UI Library | v1.3 | "..os.date("%d/%m/%Y %H:%M")
+    FooterText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    FooterText.TextSize = 14.000
+
+    local opened = true
+    Toggle.MouseButton1Click:Connect(function()
+        if opened then
+            Main.Visible = false
+            Toggle.Rotation = 0
+            opened = false
+        else
+            Main.Visible = true
+            Toggle.Rotation = 90
+            opened = true
+        end
+    end)
+
+    local InsideLibrary = {}
+
+    function InsideLibrary:CreateTab(text)
+        local TextButton1 = Instance.new("TextButton")
+        local Frame = Instance.new("ScrollingFrame")
+        local UIGridLayout_2 = Instance.new("UIGridLayout")
+        local UICorner = Instance.new("UICorner")
+
+        TextButton1.Name = text.." Button"
+        TextButton1.Parent = Tabs
+        TextButton1.BackgroundColor3 = Color3.fromRGB(32,32,32)
+        TextButton1.BackgroundTransparency = 1.000
+        TextButton1.Size = UDim2.new(0, 150, 0, 30) -- Больше кнопки
+        TextButton1.Font = Enum.Font.SourceSansSemibold
+        TextButton1.Text = text
+        TextButton1.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TextButton1.TextSize = 15.000 -- Больше текст
+
+        Frame.Parent = Items
+        Frame.Active = true
+        Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Frame.BackgroundTransparency = 1.000
+        Frame.BorderSizePixel = 0
+        Frame.Position = UDim2.new(0.017, 0, 0.035, 0)
+        Frame.Size = UDim2.new(0, 460, 0, 400) -- Больше
+        Frame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Больше места для прокрутки
+        Frame.ScrollBarImageColor3 = theme2
+        Frame.ScrollBarThickness = 8 -- Толще скроллбар
+
+        UICorner.Parent = Frame
+
+        UIGridLayout_2.Parent = Frame
+        UIGridLayout_2.FillDirection = Enum.FillDirection.Vertical
+        UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+        UIGridLayout_2.CellSize = UDim2.new(0, 100, 0, 25) -- Больше ячейки
+        UIGridLayout_2.StartCorner = Enum.StartCorner.TopRight
+
+        Frame.ChildAdded:Connect(function()
+            if #Frame:GetChildren() > 15 then
+                Frame.CanvasSize = UDim2.new(0, 0, Frame.CanvasSize.Y.Scale + 0.15, 0)
+            end
+        end)
+
+        TextButton1.MouseButton1Click:Connect(function()
+            for i,v in next, Items:GetChildren() do
+                v.Visible = false
+            end
+            for i,t in next, Tabs:GetChildren() do
+                if t.ClassName ~= "UIGridLayout" then
+                    t.TextColor3 = Color3.fromRGB(255, 255, 255)
+                end
+                TextButton1.TextColor3 = theme3
+            end
+            Frame.Visible = true
+            play("rbxassetid://1412830636")
+        end)
+
+        local InsideTab = {}
+
+        function InsideTab:CreateDropdown(text, list, callback)
+            local BodyYSize = 0
+            local IsDropped = false
+            callback = callback or function() end
+            list = list or {}
+            text = text or "Dropdown"
+            local Dropdown = Instance.new("TextLabel")
+            local TextButton = Instance.new("TextButton")
+            local TextButton_Roundify_2px_2 = Instance.new("ImageLabel")
+            local DropdownContainer = Instance.new("ImageLabel")
+            local UIListLayout_2 = Instance.new("UIListLayout")
+
+            Dropdown.Name = "Dropdown"
+            Dropdown.Parent = Frame
+            Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Dropdown.BackgroundTransparency = 1.000
+            Dropdown.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            Dropdown.Font = Enum.Font.SourceSansSemibold
+            Dropdown.Text = text
+            Dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Dropdown.TextSize = 15.000 -- Больше текст
+
+            TextButton.Parent = Dropdown
+            TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextButton.BackgroundTransparency = 1.000
+            TextButton.BorderColor3 = Color3.fromRGB(27, 42, 53)
+            TextButton.BorderSizePixel = 0
+            TextButton.Position = UDim2.new(1, 0, 0, 0)
+            TextButton.Size = UDim2.new(0, 40, 0, 30) -- Больше
+            TextButton.ZIndex = 2
+            TextButton.Font = Enum.Font.SourceSansBold
+            TextButton.Text = "+"
+            TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TextButton.TextSize = 15.000 -- Больше текст
+
+            TextButton_Roundify_2px_2.Name = "TextButton_Roundify_2px"
+            TextButton_Roundify_2px_2.Parent = TextButton
+            TextButton_Roundify_2px_2.Active = true
+            TextButton_Roundify_2px_2.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextButton_Roundify_2px_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextButton_Roundify_2px_2.BackgroundTransparency = 1.000
+            TextButton_Roundify_2px_2.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TextButton_Roundify_2px_2.Selectable = true
+            TextButton_Roundify_2px_2.Size = UDim2.new(1, 0, 1, 0)
+            TextButton_Roundify_2px_2.Image = "rbxassetid://3570695787"
+            TextButton_Roundify_2px_2.ImageColor3 = theme2
+            TextButton_Roundify_2px_2.ScaleType = Enum.ScaleType.Slice
+            TextButton_Roundify_2px_2.SliceCenter = Rect.new(100, 100, 100, 100)
+            TextButton_Roundify_2px_2.SliceScale = 0.020
+
+            TextButton.MouseButton1Click:Connect(function()
+                play("rbxassetid://178104975")
+                if not IsDropped then
+                    IsDropped = true
+                    TextButton.TextColor3 = theme3
+                    DropdownContainer.Visible = true
+                else
+                    IsDropped = false
+                    TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    DropdownContainer.Visible = false
+                end
+            end)
+
+            for i,v in pairs(list) do
+                BodyYSize = BodyYSize + 30
+                local TextButton_2 = Instance.new("TextButton")
+                TextButton_2.Parent = DropdownContainer
+                TextButton_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                TextButton_2.BackgroundTransparency = 1.000
+                TextButton_2.Size = UDim2.new(0, 230, 0, 30) -- Больше
+                TextButton_2.Font = Enum.Font.SourceSansSemibold
+                TextButton_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+                TextButton_2.Text = v
+                TextButton_2.TextSize = 15.000 -- Больше текст
+                TextButton_2.ZIndex = 4
+
+                TextButton_2.MouseButton1Click:Connect(function()
+                    Dropdown.Text = v
+                    callback(v)
+                    IsDropped = false
+                    DropdownContainer.Visible = false
+                end)
+            end
+
+            DropdownContainer.Name = "DropdownContainer"
+            DropdownContainer.Parent = TextButton
+            DropdownContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            DropdownContainer.BackgroundTransparency = 1.000
+            DropdownContainer.Position = UDim2.new(1.5, 0, 0, 0)
+            DropdownContainer.Size = UDim2.new(0, 230, 0, BodyYSize) -- Больше
+            DropdownContainer.Image = "rbxassetid://3570695787"
+            DropdownContainer.ImageColor3 = theme2
+            DropdownContainer.Visible = false
+            DropdownContainer.ScaleType = Enum.ScaleType.Slice
+            DropdownContainer.SliceCenter = Rect.new(100, 100, 100, 100)
+            DropdownContainer.SliceScale = 0.020
+            DropdownContainer.ZIndex = 3
+
+            UIListLayout_2.Parent = DropdownContainer
+            UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+        end
+
+        function InsideTab:CreateSlider(text, minvalue, maxvalue, callback)
+            text = text or "Slider"
+            minvalue = minvalue or 0
+            maxvalue = maxvalue or 100
+
+            callback = callback or function() end
+
+            local mouse = game.Players.LocalPlayer:GetMouse()
+            local uis = game:GetService("UserInputService")
+            local Value
+
+            local Slider = Instance.new("TextLabel")
+            local Frame_3 = Instance.new("ImageLabel")
+            local SliderButton = Instance.new("TextButton")
+            local TextButton_Roundify_2px = Instance.new("ImageLabel")
+            local SliderInner = Instance.new("ImageLabel")
+            local TextLabel_2 = Instance.new("TextLabel")
+            
+            Slider.Name = "Slider"
+            Slider.Parent = Frame
+            Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Slider.BackgroundTransparency = 1.000
+            Slider.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            Slider.Font = Enum.Font.SourceSansSemibold
+            Slider.Text = text
+            Slider.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Slider.TextSize = 15.000 -- Больше текст
+            
+            Frame_3.Name = "Frame"
+            Frame_3.Parent = Slider
+            Frame_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Frame_3.BackgroundTransparency = 1.000
+            Frame_3.Position = UDim2.new(1, 0, 0.395, 0)
+            Frame_3.Size = UDim2.new(0, 180, 0, 10) -- Больше
+            Frame_3.Image = "rbxassetid://3570695787"
+            Frame_3.ImageColor3 = theme2
+            Frame_3.ScaleType = Enum.ScaleType.Slice
+            Frame_3.SliceCenter = Rect.new(100, 100, 100, 100)
+            Frame_3.SliceScale = 0.020
+            
+            SliderButton.Name = "SliderButton"
+            SliderButton.Parent = Slider
+            SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            SliderButton.BackgroundTransparency = 1.000
+            SliderButton.BorderSizePixel = 0
+            SliderButton.Position = UDim2.new(1, 0, 0.391, 0)
+            SliderButton.Size = UDim2.new(0, 180, 0, 10) -- Больше
+            SliderButton.Font = Enum.Font.SourceSans
+            SliderButton.Text = ""
+            SliderButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+            SliderButton.TextSize = 14.000
+            
+            TextButton_Roundify_2px.Name = "TextButton_Roundify_2px"
+            TextButton_Roundify_2px.Parent = SliderButton
+            TextButton_Roundify_2px.Active = true
+            TextButton_Roundify_2px.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextButton_Roundify_2px.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextButton_Roundify_2px.BackgroundTransparency = 1.000
+            TextButton_Roundify_2px.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TextButton_Roundify_2px.Selectable = true
+            TextButton_Roundify_2px.Size = UDim2.new(1, 0, 1, 0)
+            TextButton_Roundify_2px.Image = "rbxassetid://3570695787"
+            TextButton_Roundify_2px.ImageColor3 = theme2
+            TextButton_Roundify_2px.ScaleType = Enum.ScaleType.Slice
+            TextButton_Roundify_2px.SliceCenter = Rect.new(100, 100, 100, 100)
+            TextButton_Roundify_2px.SliceScale = 0.020
+            
+            SliderInner.Name = "SliderInner"
+            SliderInner.Parent = SliderButton
+            SliderInner.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            SliderInner.BackgroundTransparency = 1.000
+            SliderInner.Size = UDim2.new(0, 0, 0, 10) -- Больше
+            SliderInner.Image = "rbxassetid://3570695787"
+            SliderInner.ImageColor3 = theme3
+            SliderInner.ScaleType = Enum.ScaleType.Slice
+            SliderInner.SliceCenter = Rect.new(100, 100, 100, 100)
+            SliderInner.SliceScale = 0.020
+            
+            TextLabel_2.Parent = Slider
+            TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextLabel_2.BackgroundTransparency = 1.000
+            TextLabel_2.BorderSizePixel = 2
+            TextLabel_2.Position = UDim2.new(3.1, 0, 0.4, 0)
+            TextLabel_2.Size = UDim2.new(0, 40, 0, 10) -- Больше
+            TextLabel_2.Font = Enum.Font.SourceSansBold
+            TextLabel_2.Text = tostring(minvalue)
+            TextLabel_2.TextColor3 = theme3
+            TextLabel_2.TextSize = 15.000 -- Больше текст
+            TextLabel_2.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+
+            SliderButton.MouseButton1Down:Connect(function()
+                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue)) or 0
+                pcall(function()
+                    callback(Value)
+                    TextLabel_2.Text = Value
+                end)
+                SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
+                moveconnection = mouse.Move:Connect(function()
+                    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
+                    pcall(function()
+                        callback(Value)
+                        TextLabel_2.Text = Value
+                    end)
+                    SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
+                end)
+                releaseconnection = uis.InputEnded:Connect(function(Mouse)
+                    if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
+                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 180) * SliderInner.AbsoluteSize.X) + tonumber(minvalue))
+                        pcall(function()
+                            callback(Value)
+                        end)
+                        SliderInner.Size = UDim2.new(0, math.clamp(mouse.X - SliderInner.AbsolutePosition.X, 0, 180), 0, 10)
+                        moveconnection:Disconnect()
+                        releaseconnection:Disconnect()
+                    end
+                end)
+            end)
+        end
+
+        function InsideTab:Show()
+            for i,v in next,Items:GetChildren() do
+                v.Visible = false
+            end
+            Frame.Visible = true
+            TextButton1.TextColor3 = theme3
+        end
+
+        function InsideTab:CreateToggle(text,callback)
+            text = text or "New Toggle"
+            callback = callback or function() end
+            local switchactions = {}
+            local Toggle_2 = Instance.new("TextLabel")
+            local Frame_t = Instance.new("ImageLabel")
+            local Frame_2 = Instance.new("ImageLabel")
+            local ToggleButton = Instance.new("TextButton")
+
+            Toggle_2.Name = "Toggle"
+            Toggle_2.Parent = Frame
+            Toggle_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Toggle_2.BackgroundTransparency = 1.000
+            Toggle_2.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            Toggle_2.Font = Enum.Font.SourceSansSemibold
+            Toggle_2.Text = text
+            Toggle_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Toggle_2.TextSize = 15.000 -- Больше текст
+
+            Frame_t.Name = "Frame"
+            Frame_t.Parent = Toggle_2
+            Frame_t.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Frame_t.BackgroundTransparency = 1.000
+            Frame_t.Position = UDim2.new(1, 0, 0.333, 0)
+            Frame_t.Size = UDim2.new(0, 35, 0, 15) -- Больше
+            Frame_t.Image = "rbxassetid://3570695787"
+            Frame_t.ImageColor3 = theme2
+            Frame_t.ScaleType = Enum.ScaleType.Slice
+            Frame_t.SliceCenter = Rect.new(100, 100, 100, 100)
+            Frame_t.SliceScale = 0.250
+
+            Frame_2.Name = "Frame_2"
+            Frame_2.Parent = Frame_t
+            Frame_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Frame_2.BackgroundTransparency = 1.000
+            Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
+            Frame_2.Size = UDim2.new(0, 12, 0, 12) -- Больше
+            Frame_2.Image = "rbxassetid://3570695787"
+            Frame_2.ScaleType = Enum.ScaleType.Slice
+            Frame_2.SliceCenter = Rect.new(100, 100, 100, 100)
+            Frame_2.SliceScale = 0.250
+
+            ToggleButton.Name = "ToggleButton"
+            ToggleButton.Parent = Toggle_2
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            ToggleButton.BackgroundTransparency = 1.000
+            ToggleButton.Position = UDim2.new(1, 0, 0.333, 0)
+            ToggleButton.Size = UDim2.new(0, 35, 0, 15) -- Больше
+            ToggleButton.Font = Enum.Font.SourceSans
+            ToggleButton.Text = ""
+            ToggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+            ToggleButton.TextSize = 14.000
+
+            local enabled = false
+            function trigger()
+                enabled = not enabled
+                pcall(callback,enabled)
+                play("rbxassetid://6309164078")
+                if enabled then
+                    Frame_t.ImageColor3 = theme3
+                    if toolight then
+                        Frame_2.ImageColor3 = Color3.fromRGB(26,26,26)
+                    end
+                    Frame_2.Position = UDim2.new(0.59, 0, 0.15, 0)
+                else
+                    Frame_t.ImageColor3 = theme2
+                    if toolight then
+                        Frame_2.ImageColor3 = theme3
+                    end
+                    Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
+                end
+            end
+
+            ToggleButton.MouseButton1Click:Connect(trigger)
+
+            function switchactions:Set(state)
+                enabled = state
+                if enabled then
+                    Frame_t.ImageColor3 = theme3
+                    if toolight then
+                        Frame_2.ImageColor3 = Color3.fromRGB(26,26,26)
+                    end
+                    Frame_2.Position = UDim2.new(0.59, 0, 0.15, 0)
+                else
+                    Frame_t.ImageColor3 = theme2
+                    if toolight then
+                        Frame_2.ImageColor3 = theme3
+                    end
+                    Frame_2.Position = UDim2.new(0, 3, 0.15, 0)
+                end
+                pcall(callback,enabled)
+            end
+            return switchactions
+        end
+
+        function InsideTab:CreateCheckbox(text,callback)
+            local Cheat = Instance.new("TextLabel")
+            local MainCheatFrame = Instance.new("ImageLabel")
+            local InsideCheatFrame = Instance.new("ImageLabel")
+            local CheatButton = Instance.new("TextButton")
+            
+            Cheat.Name = "Cheat"
+            Cheat.Parent = Frame
+            Cheat.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Cheat.BackgroundTransparency = 1.000
+            Cheat.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            Cheat.Text = text
+            Cheat.Font = Enum.Font.SourceSansSemibold
+            Cheat.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Cheat.TextSize = 15.000 -- Больше текст
+            
+            MainCheatFrame.Name = "MainCheatFrame"
+            MainCheatFrame.Parent = Cheat
+            MainCheatFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            MainCheatFrame.BackgroundTransparency = 1.000
+            MainCheatFrame.Position = UDim2.new(1, 0, 0.13, 0)
+            MainCheatFrame.Size = UDim2.new(0, 25, 0, 25) -- Больше
+            MainCheatFrame.Image = "rbxassetid://3570695787"
+            MainCheatFrame.ImageColor3 = theme2
+            MainCheatFrame.ScaleType = Enum.ScaleType.Slice
+            MainCheatFrame.SliceCenter = Rect.new(100, 100, 100, 100)
+            MainCheatFrame.SliceScale = 0.020
+            
+            InsideCheatFrame.Name = "Frame"
+            InsideCheatFrame.Parent = MainCheatFrame
+            InsideCheatFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+            InsideCheatFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            InsideCheatFrame.BackgroundTransparency = 1.000
+            InsideCheatFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+            InsideCheatFrame.Size = UDim2.new(0, 20, 0, 20) -- Больше
+            InsideCheatFrame.Image = "rbxassetid://3570695787"
+            InsideCheatFrame.ImageColor3 = theme2
+            InsideCheatFrame.ScaleType = Enum.ScaleType.Slice
+            InsideCheatFrame.SliceCenter = Rect.new(100, 100, 100, 100)
+            InsideCheatFrame.SliceScale = 0.020
+            
+            CheatButton.Parent = MainCheatFrame
+            CheatButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            CheatButton.BackgroundTransparency = 1.000
+            CheatButton.Size = UDim2.new(0, 25, 0, 25) -- Больше
+            CheatButton.Font = Enum.Font.SourceSans
+            CheatButton.Text = ""
+            CheatButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+            CheatButton.TextSize = 14.000
+            CheatButton.ZIndex = 2
+
+            local enabledcheat = false
+            function triggercheat()
+                enabledcheat = not enabledcheat
+                pcall(callback,enabledcheat)
+                play("rbxassetid://6309164078")
+                if enabledcheat then
+                    InsideCheatFrame.ImageColor3 = theme3
+                else
+                    InsideCheatFrame.ImageColor3 = theme2
+                end
+            end
+            
+            CheatButton.MouseButton1Click:Connect(triggercheat)
+        end
+
+        function InsideTab:CreateButton(text, callback)
+            text = text or "New Button"
+            callback = callback or function() end
+            local Button = Instance.new("TextButton")
+            local Button_Roundify_3px = Instance.new("ImageLabel")
+            Button.Name = "Btn"
+            Button.Parent = Frame
+            Button.BackgroundColor3 = Color3.fromRGB(116, 116, 116)
+            Button.BackgroundTransparency = 1.000
+            Button.BorderSizePixel = 0
+            Button.Position = UDim2.new(-0.005, 0, 0.06, 0)
+            Button.Size = UDim2.new(0, 45, 0, 25) -- Больше
+            Button.ZIndex = 2
+            Button.Font = Enum.Font.SourceSansSemibold
+            Button.Text = text
+            Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Button.TextSize = 15.000 -- Больше текст
+            
+            Button_Roundify_3px.Name = "Button_Roundify_3px"
+            Button_Roundify_3px.Parent = Button
+            Button_Roundify_3px.Active = true
+            Button_Roundify_3px.AnchorPoint = Vector2.new(0.5, 0.5)
+            Button_Roundify_3px.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Button_Roundify_3px.BackgroundTransparency = 1.000
+            Button_Roundify_3px.Position = UDim2.new(0.5, 0, 0.5, 0)
+            Button_Roundify_3px.Selectable = true
+            Button_Roundify_3px.Size = UDim2.new(1, 0, 1, 0)
+            Button_Roundify_3px.Image = "rbxassetid://3570695787"
+            Button_Roundify_3px.ImageColor3 = theme2
+            Button_Roundify_3px.ScaleType = Enum.ScaleType.Slice
+            Button_Roundify_3px.SliceCenter = Rect.new(100, 100, 100, 100)
+            Button_Roundify_3px.SliceScale = 0.030
+
+            Button.MouseButton1Click:Connect(function()
+                pcall(callback)
+                play("rbxassetid://178104975")
+            end)
+        end
+        
+        function InsideTab:CreateLabel(text)
+            text = text or "New Label"
+            local Label = Instance.new("TextLabel")
+            Label.Name = "Label"
+            Label.Parent = Frame
+            Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Label.BackgroundTransparency = 1.000
+            Label.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            Label.Font = Enum.Font.SourceSansSemibold
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Label.TextSize = 15.000 -- Больше текст
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+        end
+        
+        function InsideTab:CreateTextBox(text, placeholder, callback)
+            text = text or "New TextBox"
+            placeholder = placeholder or "Enter text..."
+            callback = callback or function() end
+            
+            local TextBoxContainer = Instance.new("TextLabel")
+            local TextBox = Instance.new("TextBox")
+            local TextBox_Roundify = Instance.new("ImageLabel")
+            
+            TextBoxContainer.Name = "TextBoxContainer"
+            TextBoxContainer.Parent = Frame
+            TextBoxContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextBoxContainer.BackgroundTransparency = 1.000
+            TextBoxContainer.Size = UDim2.new(0, 220, 0, 50) -- Больше
+            TextBoxContainer.Font = Enum.Font.SourceSansSemibold
+            TextBoxContainer.Text = text
+            TextBoxContainer.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TextBoxContainer.TextSize = 15.000 -- Больше текст
+            
+            TextBox.Parent = TextBoxContainer
+            TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextBox.BackgroundTransparency = 1.000
+            TextBox.Position = UDim2.new(1, 0, 0, 0)
+            TextBox.Size = UDim2.new(0, 120, 0, 25) -- Больше
+            TextBox.Font = Enum.Font.SourceSans
+            TextBox.PlaceholderText = placeholder
+            TextBox.Text = ""
+            TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TextBox.TextSize = 15.000 -- Больше текст
+            
+            TextBox_Roundify.Name = "TextBox_Roundify"
+            TextBox_Roundify.Parent = TextBox
+            TextBox_Roundify.Active = true
+            TextBox_Roundify.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextBox_Roundify.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            TextBox_Roundify.BackgroundTransparency = 1.000
+            TextBox_Roundify.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TextBox_Roundify.Selectable = true
+            TextBox_Roundify.Size = UDim2.new(1, 0, 1, 0)
+            TextBox_Roundify.Image = "rbxassetid://3570695787"
+            TextBox_Roundify.ImageColor3 = theme2
+            TextBox_Roundify.ScaleType = Enum.ScaleType.Slice
+            TextBox_Roundify.SliceCenter = Rect.new(100, 100, 100, 100)
+            TextBox_Roundify.SliceScale = 0.020
+            
+            TextBox.FocusLost:Connect(function(enterPressed)
+                if enterPressed then
+                    pcall(callback, TextBox.Text)
+                end
+            end)
+        end
+
+        return InsideTab
+    end
+    return InsideLibrary
+end
+return library прилеклевиается меню к мышке пофиксь и добавь createtoggle , createslider, createbutton
