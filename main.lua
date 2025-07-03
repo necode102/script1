@@ -370,7 +370,7 @@ function library:CreateWindow(title, themeName)
 
         local tabLib = {}
         
-        -- Элемент: Заголовок
+        -- Функция создания секции
         function tabLib:CreateSection(title)
             local section = Instance.new("Frame")
             section.Name = "Section"
@@ -401,7 +401,7 @@ function library:CreateWindow(title, themeName)
             return section
         end
         
-        -- Элемент: Кнопка
+        -- Функция создания кнопки
         function tabLib:CreateButton(text, callback)
             local button = Instance.new("TextButton")
             button.Name = "Button"
@@ -486,7 +486,7 @@ function library:CreateWindow(title, themeName)
             return button
         end
         
-        -- Элемент: Переключатель
+        -- Функция создания переключателя
         function tabLib:CreateToggle(text, default, callback)
             local toggle = Instance.new("Frame")
             toggle.Name = "Toggle"
@@ -576,7 +576,7 @@ function library:CreateWindow(title, themeName)
             }
         end
         
-        -- Элемент: Слайдер
+        -- Функция создания слайдера
         function tabLib:CreateSlider(text, min, max, default, callback)
             local slider = Instance.new("Frame")
             slider.Name = "Slider"
@@ -691,7 +691,7 @@ function library:CreateWindow(title, themeName)
             }
         end
         
-        -- Элемент: Выпадающий список
+        -- Функция создания выпадающего списка
         function tabLib:CreateDropdown(text, options, callback)
             local dropdown = Instance.new("Frame")
             dropdown.Name = "Dropdown"
