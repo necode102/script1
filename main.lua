@@ -50,15 +50,13 @@ function library:CreateWindow(name,theme)
     local Top = Instance.new("Frame")
     Top.Name = "Top"
     Top.Parent = Screen
-    Top.AnchorPoint = Vector2.new(0.5, 0.5)
+    Top.AnchorPoint = Vector2.new(0.5, 0)
     Top.BackgroundColor3 = theme1
     Top.BorderSizePixel = 0
-    Top.Position = UDim2.new(0.5, 0, 0.2, 0)
-    Top.Size = UDim2.new(0, 700, 0, 40) -- Увеличенная высота для лучшего захвата
+    Top.Position = UDim2.new(0.5, 0, 0.1, 0)
+    Top.Size = UDim2.new(0, 700, 0, 40)
     Top.Active = true
-    Top.Draggable = true
     
-    -- Добавляем скругленные углы
     local TopCorner = Instance.new("UICorner")
     TopCorner.CornerRadius = UDim.new(0, 6)
     TopCorner.Parent = Top
@@ -92,12 +90,12 @@ function library:CreateWindow(name,theme)
     -- Main Frame
     local Main = Instance.new("Frame")
     Main.Name = "Main"
-    Main.Parent = Top
+    Main.Parent = Screen
     Main.AnchorPoint = Vector2.new(0.5, 0)
     Main.BackgroundColor3 = theme2
     Main.BorderSizePixel = 0
-    Main.Position = UDim2.new(0.5, 0, 1, 5)
-    Main.Size = UDim2.new(1, 0, 0, 500) -- Большая высота
+    Main.Position = UDim2.new(0.5, 0, 0.1, 45) -- Позиция под Top
+    Main.Size = UDim2.new(0, 700, 0, 500)
     Main.ClipsDescendants = true
     
     local MainCorner = Instance.new("UICorner")
@@ -171,31 +169,49 @@ function library:CreateWindow(name,theme)
         if opened then
             -- Анимация открытия
             TweenService:Create(Toggle, tweenInfo, {Rotation = 180}):Play()
-            TweenService:Create(Main, tweenInfo, {Size = UDim2.new(1, 0, 0, 500)}):Play()
+            TweenService:Create(Main, tweenInfo, {Size = UDim2.new(0, 700, 0, 500)}):Play()
         else
             -- Анимация закрытия
             TweenService:Create(Toggle, tweenInfo, {Rotation = 0}):Play()
-            TweenService:Create(Main, tweenInfo, {Size = UDim2.new(1, 0, 0, 0)}):Play()
+            TweenService:Create(Main, tweenInfo, {Size = UDim2.new(0, 700, 0, 0)}):Play()
         end
     end
 
     Toggle.MouseButton1Click:Connect(toggleMenu)
 
-    -- Drag с увеличенной областью
-    local dragInput, dragStart, startPos
-    local function updateInput(input)
+    -- ПРАВИЛЬНЫЙ Drag-n-Drop
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+
+    local function update(input)
         local delta = input.Position - dragStart
-        local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        TweenService:Create(Top, TweenInfo.new(0.15), {Position = position}):Play()
+        local newPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        
+        -- Ограничиваем позицию в пределах экрана
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        local xMin = Top.AbsoluteSize.X/2
+        local xMax = viewportSize.X - Top.AbsoluteSize.X/2
+        local yMin = Top.AbsoluteSize.Y/2
+        local yMax = viewportSize.Y - Top.AbsoluteSize.Y/2
+        
+        local xPos = math.clamp(newPos.X.Offset, xMin, xMax)
+        local yPos = math.clamp(newPos.Y.Offset, yMin, yMax)
+        
+        Top.Position = UDim2.new(newPos.X.Scale, xPos, newPos.Y.Scale, yPos)
+        Main.Position = UDim2.new(0.5, 0, 0, Top.Position.Y.Offset + Top.AbsoluteSize.Y + 5)
     end
 
     Top.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
             dragStart = input.Position
             startPos = Top.Position
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
-                    dragInput = nil
+                    dragging = false
                 end
             end)
         end
@@ -208,8 +224,8 @@ function library:CreateWindow(name,theme)
     end)
 
     game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if input == dragInput then
-            updateInput(input)
+        if input == dragInput and dragging then
+            update(input)
         end
     end)
 
@@ -221,7 +237,7 @@ function library:CreateWindow(name,theme)
         TabButton.Parent = Tabs
         TabButton.BackgroundColor3 = theme1
         TabButton.BackgroundTransparency = 0
-        TabButton.Size = UDim2.new(0.9, 0, 0, 35) -- Большие кнопки вкладок
+        TabButton.Size = UDim2.new(0.9, 0, 0, 35)
         TabButton.Font = Enum.Font.GothamSemibold
         TabButton.Text = text
         TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -269,9 +285,9 @@ function library:CreateWindow(name,theme)
         end)
 
         local InsideTab = {}
-
-        -- Здесь будут функции для создания элементов управления (как в предыдущих версиях)
-        -- Они должны быть адаптированы под новую структуру
+        
+        -- Здесь будут функции для создания элементов управления (кнопок, слайдеров и т.д.)
+        -- Добавьте их по аналогии с предыдущими версиями
         
         return InsideTab
     end
